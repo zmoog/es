@@ -48,15 +48,15 @@ func main() {
 	// Get the Elasticsearch client info and cluster info.
 	//
 
-	log.Println(elasticsearch.Version)
+	// log.Println(elasticsearch.Version)
 
-	info, err := client.Info()
-	if err != nil {
-		log.Fatalf("Error getting response: %s", err)
-		os.Exit(1)
-	}
-	defer info.Body.Close()
-	log.Println(info)
+	// info, err := client.Info()
+	// if err != nil {
+	// 	log.Fatalf("Error getting response: %s", err)
+	// 	os.Exit(1)
+	// }
+	// defer info.Body.Close()
+	// log.Println(info)
 
 	//
 	// Index a document in Elasticsearch from stdin.
@@ -69,7 +69,7 @@ func main() {
 
 	// Build the request.
 	req := esapi.IndexRequest{
-		Index: "test",
+		Index: "logs-generic-default",
 		Body:  strings.NewReader(text),
 	}
 
