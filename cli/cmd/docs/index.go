@@ -13,12 +13,12 @@ var (
 func initIndexCommand() *cobra.Command {
 	cmd := cobra.Command{
 		Use:   "index",
-		Short: "Index",
+		Short: "Index a document in Elasticsearch",
 		RunE:  runIndexCommand,
 	}
 
 	cmd.Flags().StringVar(&doc, "doc", "-", "Document to index")
-	cmd.Flags().StringVar(&index, "index", "logs-generic-default", "Index name")
+	cmd.Flags().StringVar(&index, "index", "logs-generic-default", "Index or data stream name")
 
 	return &cmd
 }

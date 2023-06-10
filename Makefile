@@ -1,6 +1,8 @@
+NOW := $(shell date +%FT%T%z)
+
 tidy:
 	go mod tidy
 
 run:
-	go run main.go
+	echo "{\"@timestamp\": \"$(NOW)\", \"name\": \"Maurizio Branca\"}" | go run main.go docs index -
 

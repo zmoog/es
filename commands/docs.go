@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/elastic/go-elasticsearch/v8/esapi"
-	"github.com/zmoog/classeviva/adapters/feedback"
 )
 
 type IndexDocCommand struct {
@@ -24,15 +23,6 @@ func (c IndexDocCommand) ExecuteWith(uow UnitOfWork) error {
 		reader := bufio.NewReader(os.Stdin)
 		value, _ = reader.ReadString('\n')
 	}
-	// if value == "" {
-	// 	// Read from stdin until a newline is encountered.
-	// 	reader := bufio.NewReader(os.Stdin)
-	// 	value, _ = reader.ReadString('\n')
-	// 	// log.Println(text)
-	// }
-
-	feedback.Println("value = [" + value + "]")
-	feedback.Println("index = [" + c.Index + "]")
 
 	// Build the request.
 	req := esapi.IndexRequest{
