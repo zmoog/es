@@ -22,21 +22,6 @@ func (r Runner) Run(command Command) error {
 }
 
 func NewRunner() (*Runner, error) {
-	// usernane := os.Getenv("CLASSEVIVA_USERNAME")
-	// password := os.Getenv("CLASSEVIVA_PASSWORD")
-	// if usernane == "" || password == "" {
-	// 	return Runner{}, errors.New("CLASSEVIVA_USERNAME or CLASSEVIVA_PASSWORD environment variables are empty")
-	// }
-
-	// identityStorePath, err := os.UserHomeDir()
-	// if err != nil {
-	// 	return Runner{}, fmt.Errorf("failed to get the user home dir: %w", err)
-	// }
-
-	// adapter, err := spaggiari.From(usernane, password, identityStorePath)
-	// if err != nil {
-	// 	return Runner{}, err
-	// }
 	endpoints, ok := os.LookupEnv("ELASTICSEARCH_ENDPOINTS")
 	if !ok {
 		log.Fatal("ELASTICSEARCH_ENDPOINTS is not set")
