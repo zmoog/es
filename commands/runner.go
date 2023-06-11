@@ -1,17 +1,19 @@
 package commands
 
 import (
-	"log"
+	"fmt"
 	"os"
 	"strings"
 
 	"github.com/elastic/go-elasticsearch/v8"
 )
 
+// Runner is a command runner.
 type Runner struct {
 	uow UnitOfWork
 }
 
+// Run executes the given command.
 func (r Runner) Run(command Command) error {
 	err := command.ExecuteWith(r.uow)
 	if err != nil {
@@ -21,17 +23,16 @@ func (r Runner) Run(command Command) error {
 	return nil
 }
 
+// NewRunner creates a new runner that can execute commands.
 func NewRunner() (*Runner, error) {
 	endpoints, ok := os.LookupEnv("ELASTICSEARCH_ENDPOINTS")
 	if !ok {
-		log.Fatal("ELASTICSEARCH_ENDPOINTS is not set")
-		os.Exit(1)
+		return nil, fmt.Errorf("ELASTICSEARCH_ENDPOINTS is not set")
 	}
 
 	apiKey, ok := os.LookupEnv("ELASTICSEARCH_API_KEY")
 	if !ok {
-		log.Fatal("ELASTICSEARCH_API_KEY is not set")
-		os.Exit(1)
+		return nil, fmt.Errorf("ELASTICSEARCH_API_KEY is not set")
 	}
 
 	//
@@ -45,8 +46,7 @@ func NewRunner() (*Runner, error) {
 
 	client, err := elasticsearch.NewClient(cfg)
 	if err != nil {
-		log.Fatalf("Error creating the client: %s", err)
-		os.Exit(1)
+		return nil, fmt.Errorf("error creating the elasticsearch client: %w", err)
 	}
 
 	runner := Runner{
