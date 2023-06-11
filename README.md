@@ -1,6 +1,6 @@
 # elasticsearch-cli
 
-Elasticsearch CLI tool to access https://www.elastic.co/guide/en/elasticsearch/reference/current/rest-apis.html from the terminal.
+Elasticsearch CLI tool to access [Elasticsearch REST API](https://www.elastic.co/guide/en/elasticsearch/reference/current/rest-apis.html) from the terminal.
 
 ## Installation
 
