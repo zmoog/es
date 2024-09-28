@@ -1,4 +1,4 @@
-module github.com/zmoog/elasticsearch-cli
+module github.com/zmoog/es
 
 go 1.20
 
