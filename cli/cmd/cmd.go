@@ -9,7 +9,7 @@ import (
 
 func Execute() {
 	rootCmd := cobra.Command{
-		Use: "elasticsearch-cli",
+		Use: "es",
 	}
 
 	rootCmd.AddCommand(docs.NewCommand())
