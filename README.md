@@ -6,7 +6,7 @@ Elasticsearch CLI tool to access [Elasticsearch REST API](https://www.elastic.co
 
 Install this tool using Go:
 
-    go install github.com/zmoog/elasticsearch-cli@latest
+    go install github.com/zmoog/es@latest
 
 ## Usage
 

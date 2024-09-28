@@ -2,7 +2,7 @@ package version
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/zmoog/elasticsearch-cli/commands"
+	"github.com/zmoog/es/commands"
 )
 
 func NewCommand() *cobra.Command {

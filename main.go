@@ -1,6 +1,6 @@
 package main
 
-import "github.com/zmoog/elasticsearch-cli/cli/cmd"
+import "github.com/zmoog/es/cli/cmd"
 
 func main() {
 	cmd.Execute()
