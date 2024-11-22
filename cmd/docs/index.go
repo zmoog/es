@@ -2,7 +2,8 @@ package docs
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/zmoog/es/commands"
+	"github.com/zmoog/es/es"
+	"github.com/zmoog/es/es/commands"
 )
 
 var (
@@ -24,7 +25,7 @@ func initIndexCommand() *cobra.Command {
 }
 
 func runIndexCommand(cmd *cobra.Command, args []string) error {
-	runner, err := commands.NewRunner()
+	runner, err := es.NewRunner()
 	if err != nil {
 		return err
 	}

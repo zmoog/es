@@ -9,6 +9,7 @@ func NewCommand() *cobra.Command {
 	}
 
 	cmd.AddCommand(initIndexCommand())
+	cmd.AddCommand(initBulkCommand())
 
 	return &cmd
 }
