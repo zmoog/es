@@ -30,22 +30,17 @@ func (r Runner) Run(command commands.Command) error {
 
 // NewRunner creates a new runner that can execute commands.
 func NewRunner() (*Runner, error) {
-	apiEndpoints := viper.GetString("api.endpoints")
-	apiKey := viper.GetString("api.key")
-
 	retryBackoff := backoff.NewExponentialBackOff()
-
-	// caCert, _ := os.ReadFile("/Users/zmoog/.elastic-package/profiles/default/certs/ca-cert.pem")
-
 	//
 	// Create the Elasticsearch client.
 	//
 
 	cfg := elasticsearch.Config{
-		Addresses: strings.Split(apiEndpoints, ","),
-		APIKey:    apiKey,
+		Addresses: strings.Split(viper.GetString("api.endpoints"), ","),
+		APIKey:    viper.GetString("api.key"),
 		// RetryOnStatus: []int{502, 503, 504, 429},
 		RetryOnStatus: viper.GetIntSlice("client.retry-on-status"),
+
 		RetryBackoff: func(i int) time.Duration {
 			if i == 1 {
 				retryBackoff.Reset()
@@ -54,16 +49,17 @@ func NewRunner() (*Runner, error) {
 			return retryBackoff.NextBackOff()
 		},
 		MaxRetries: viper.GetInt("client.max-retries"),
-		// CACert:     viper.get,
 	}
 
+	// Load and set the CA certificate, if a path is provided.
 	if viper.IsSet("client.ca-cert-path") {
-		cert, err := os.ReadFile(viper.GetString("client.ca-cert-path"))
+		caCert, err := os.ReadFile(viper.GetString("client.ca-cert-path"))
 		if err != nil {
 			return nil, fmt.Errorf("error reading CA certificate: %w", err)
 		}
 
-		cfg.CACert = cert
+		// Set the CA certificate.
+		cfg.CACert = caCert
 	}
 
 	client, err := elasticsearch.NewClient(cfg)
