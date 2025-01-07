@@ -35,9 +35,6 @@ var rootCmd = cobra.Command{
 		if !viper.IsSet("client.retry-on-status") {
 			must(cmd.MarkFlagRequired("retry-on-status"))
 		}
-		if !viper.IsSet("client.ca-cert-path") {
-			must(cmd.MarkFlagRequired("ca-cert-path"))
-		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		feedback.Println("[" + viper.GetString("api.endpoints") + "]")
