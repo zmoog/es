@@ -7,9 +7,9 @@ import (
 )
 
 var (
-	version string = "v0.0.0"
-	commit  string = "123"
-	date    string = "2022-05-08"
+	version string = "latest"
+	commit  string = "unknown"
+	date    string = "2025-01-07"
 	builtBy string = "zmoog"
 )
 

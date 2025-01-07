@@ -16,7 +16,6 @@ func NewCommand() *cobra.Command {
 }
 
 func runVersionCommand(cmd *cobra.Command, args []string) error {
-
 	runner, err := es.NewRunner()
 	if err != nil {
 		return err

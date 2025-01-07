@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/cenkalti/backoff/v4"
+	"github.com/spf13/viper"
 	"github.com/zmoog/es/es/commands"
 
 	"github.com/elastic/go-elasticsearch/v8"
@@ -29,26 +30,22 @@ func (r Runner) Run(command commands.Command) error {
 
 // NewRunner creates a new runner that can execute commands.
 func NewRunner() (*Runner, error) {
-	endpoints, ok := os.LookupEnv("ELASTICSEARCH_ENDPOINTS")
-	if !ok {
-		return nil, fmt.Errorf("ELASTICSEARCH_ENDPOINTS is not set")
-	}
-
-	apiKey, ok := os.LookupEnv("ELASTICSEARCH_API_KEY")
-	if !ok {
-		return nil, fmt.Errorf("ELASTICSEARCH_API_KEY is not set")
-	}
+	apiEndpoints := viper.GetString("api.endpoints")
+	apiKey := viper.GetString("api.key")
 
 	retryBackoff := backoff.NewExponentialBackOff()
+
+	// caCert, _ := os.ReadFile("/Users/zmoog/.elastic-package/profiles/default/certs/ca-cert.pem")
 
 	//
 	// Create the Elasticsearch client.
 	//
 
 	cfg := elasticsearch.Config{
-		Addresses:     strings.Split(endpoints, ","),
-		APIKey:        apiKey,
-		RetryOnStatus: []int{502, 503, 504, 429},
+		Addresses: strings.Split(apiEndpoints, ","),
+		APIKey:    apiKey,
+		// RetryOnStatus: []int{502, 503, 504, 429},
+		RetryOnStatus: viper.GetIntSlice("client.retry-on-status"),
 		RetryBackoff: func(i int) time.Duration {
 			if i == 1 {
 				retryBackoff.Reset()
@@ -56,7 +53,17 @@ func NewRunner() (*Runner, error) {
 
 			return retryBackoff.NextBackOff()
 		},
-		MaxRetries: 5,
+		MaxRetries: viper.GetInt("client.max-retries"),
+		// CACert:     viper.get,
+	}
+
+	if viper.IsSet("client.ca-cert-path") {
+		cert, err := os.ReadFile(viper.GetString("client.ca-cert-path"))
+		if err != nil {
+			return nil, fmt.Errorf("error reading CA certificate: %w", err)
+		}
+
+		cfg.CACert = cert
 	}
 
 	client, err := elasticsearch.NewClient(cfg)
