@@ -31,14 +31,13 @@ func (r Runner) Run(command commands.Command) error {
 // NewRunner creates a new runner that can execute commands.
 func NewRunner() (*Runner, error) {
 	retryBackoff := backoff.NewExponentialBackOff()
+
 	//
 	// Create the Elasticsearch client.
 	//
-
 	cfg := elasticsearch.Config{
-		Addresses: strings.Split(viper.GetString("api.endpoints"), ","),
-		APIKey:    viper.GetString("api.key"),
-		// RetryOnStatus: []int{502, 503, 504, 429},
+		Addresses:     strings.Split(viper.GetString("api.endpoints"), ","),
+		APIKey:        viper.GetString("api.key"),
 		RetryOnStatus: viper.GetIntSlice("client.retry-on-status"),
 
 		RetryBackoff: func(i int) time.Duration {

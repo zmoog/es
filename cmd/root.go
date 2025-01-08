@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/viper"
 	"github.com/zmoog/classeviva/adapters/feedback"
 	"github.com/zmoog/es/cmd/docs"
+	"github.com/zmoog/es/cmd/search"
 	"github.com/zmoog/es/cmd/version"
 )
 
@@ -36,10 +37,6 @@ var rootCmd = cobra.Command{
 			must(cmd.MarkFlagRequired("retry-on-status"))
 		}
 	},
-	Run: func(cmd *cobra.Command, args []string) {
-		feedback.Println("[" + viper.GetString("api.endpoints") + "]")
-		feedback.Println("[" + viper.GetString("api.key") + "]")
-	},
 }
 
 func Execute() {
@@ -60,6 +57,7 @@ func init() {
 	rootCmd.PersistentFlags().StringP("client-ca-cert-path", "c", "", "CA certificate path")
 
 	rootCmd.AddCommand(docs.NewCommand())
+	rootCmd.AddCommand(search.NewCommand())
 	rootCmd.AddCommand(version.NewCommand())
 }
 
