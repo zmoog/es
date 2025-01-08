@@ -6,6 +6,8 @@ import (
 	"github.com/zmoog/es/es/commands"
 )
 
+var query string
+
 func NewCommand() *cobra.Command {
 	cmd := cobra.Command{
 		Use:   "search [index or data stream]",
@@ -19,12 +21,12 @@ func NewCommand() *cobra.Command {
 
 			return runner.Run(commands.SearchCommand{
 				Index: args[0],
-				Query: cmd.Flag("query").Value.String(),
+				Query: query,
 			})
 		},
 	}
 
-	cmd.Flags().StringP("query", "q", "", "Query to search for")
+	cmd.Flags().StringVarP(&query, "query", "q", "", "Query to search for")
 	cmd.MarkFlagRequired("query")
 
 	return &cmd
