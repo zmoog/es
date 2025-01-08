@@ -26,6 +26,49 @@ You can also send documents from stdin (use `-` as the filename):
 
     cat docs.json | es docs bulk -f -
 
+### Search
+
+For searching documents in an Elasticsearch cluster, run:
+
+    $ es search my_index -q '{"query": {"match_all": {}}}' | jq
+    {
+      "took": 0,
+      "timed_out": false,
+      "_shards": {
+        "total": 1,
+        "successful": 1,
+        "skipped": 0,
+        "failed": 0
+      },
+      "hits": {
+        "total": {
+          "value": 2,
+          "relation": "eq"
+        },
+        "max_score": 1.0,
+        "hits": [
+          {
+            "_index": ".ds-logs-test-default-2025.01.08-000001",
+            "_id": "638aSJQBashsspu13aIM",
+            "_score": 1.0,
+            "_source": {
+              "name": "Maurizio Branca",
+              "@timestamp": "2025-01-08T22:48:27.659837121Z"
+            }
+          },
+          {
+            "_index": ".ds-logs-test-default-2025.01.08-000001",
+            "_id": "0X8DSJQBashsspu145t7",
+            "_score": 1.0,
+            "_source": {
+              "name": "Maurizio Branca",
+              "@timestamp": "2025-01-08T22:23:21.211245339Z"
+            }
+          }
+        ]
+      }
+    }
+
 ### Configuration
 
 You have the flexibility to set the app setting using the following methods (increasing priority):
