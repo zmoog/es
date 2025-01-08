@@ -37,10 +37,6 @@ var rootCmd = cobra.Command{
 			must(cmd.MarkFlagRequired("retry-on-status"))
 		}
 	},
-	// Run: func(cmd *cobra.Command, args []string) {
-	// 	feedback.Println("[" + viper.GetString("api.endpoints") + "]")
-	// 	feedback.Println("[" + viper.GetString("api.key") + "]")
-	// },
 }
 
 func Execute() {
