@@ -6,6 +6,16 @@ Currently, it supports only a fraction of the Elasticsearch REST APIs.
 
 ## Installation
 
+### Using Homebrew (macOS and Linux)
+
+Install this tool using Homebrew:
+
+```sh
+brew install zmoog/homebrew-es/es
+```
+
+### Using Go
+
 Install this tool using Go:
 
     go install github.com/zmoog/es@latest
