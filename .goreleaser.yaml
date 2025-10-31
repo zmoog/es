@@ -20,7 +20,12 @@ builds:
   - binary: es
     id: es
     ldflags:
-      - -s -w -X github.com/zmoog/es/es/commands.version={{.Version}} -X github.com/zmoog/es/es/commands.commit={{.Commit}} -X github.com/zmoog/es/es/commands.date={{.Date}} -X github.com/zmoog/es/es/commands.builtBy=goreleaser
+      - -s
+      - -w
+      - -X github.com/zmoog/es/es/commands.version={{.Version}}
+      - -X github.com/zmoog/es/es/commands.commit={{.Commit}}
+      - -X github.com/zmoog/es/es/commands.date={{.Date}}
+      - -X github.com/zmoog/es/es/commands.builtBy=goreleaser
     env:
       - CGO_ENABLED=0
     goos:
