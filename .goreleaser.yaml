@@ -45,7 +45,7 @@ homebrew_casks:
   - name: es
     repository:
       owner: zmoog
-      name: homebrew
+      name: homebrew-es
       branch: main
     binaries:
       - es
