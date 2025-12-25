@@ -79,6 +79,26 @@ For searching documents in an Elasticsearch cluster, run:
       }
     }
 
+### Data Stream
+
+For deleting a data stream and its backing indices, run:
+
+    es datastream delete logs-test-default
+
+You can also use wildcard patterns to delete multiple data streams:
+
+    es datastream delete 'logs-*'
+
+To skip the confirmation prompt, use the `--force` flag:
+
+    es datastream delete logs-test-default --force
+
+### Version
+
+For printing the application version, run:
+
+    es version
+
 ### Configuration
 
 You have the flexibility to set the app setting using the following methods (increasing priority):

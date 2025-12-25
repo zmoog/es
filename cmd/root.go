@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/zmoog/classeviva/adapters/feedback"
+	"github.com/zmoog/es/cmd/datastream"
 	"github.com/zmoog/es/cmd/docs"
 	"github.com/zmoog/es/cmd/search"
 	"github.com/zmoog/es/cmd/version"
@@ -56,6 +57,7 @@ func init() {
 	rootCmd.PersistentFlags().IntP("client-max-retries", "m", 1, "Maximum number of retries")
 	rootCmd.PersistentFlags().StringP("client-ca-cert-path", "c", "", "CA certificate path")
 
+	rootCmd.AddCommand(datastream.NewCommand())
 	rootCmd.AddCommand(docs.NewCommand())
 	rootCmd.AddCommand(search.NewCommand())
 	rootCmd.AddCommand(version.NewCommand())
