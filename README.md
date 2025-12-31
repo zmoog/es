@@ -79,6 +79,10 @@ For searching documents in an Elasticsearch cluster, run:
       }
     }
 
+You can also pipe the query from stdin:
+
+    echo '{"query": {"match_all": {}}}' | es search my_index
+
 ### Data Stream
 
 For deleting a data stream and its backing indices, run:
