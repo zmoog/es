@@ -36,7 +36,6 @@ func NewRunner() (*Runner, error) {
 	// Create the Elasticsearch client.
 	//
 	cfg := elasticsearch.Config{
-		Addresses:     strings.Split(viper.GetString("api.endpoints"), ","),
 		APIKey:        viper.GetString("api.key"),
 		RetryOnStatus: viper.GetIntSlice("client.retry-on-status"),
 
@@ -48,6 +47,14 @@ func NewRunner() (*Runner, error) {
 			return retryBackoff.NextBackOff()
 		},
 		MaxRetries: viper.GetInt("client.max-retries"),
+	}
+
+	// Prefer CloudID (set from a context's cloud_id field); fall back to
+	// explicit endpoint addresses.
+	if cloudID := viper.GetString("api.cloud-id"); cloudID != "" {
+		cfg.CloudID = cloudID
+	} else if endpoints := viper.GetString("api.endpoints"); endpoints != "" {
+		cfg.Addresses = strings.Split(endpoints, ",")
 	}
 
 	// Load and set the CA certificate, if a path is provided.
