@@ -7,23 +7,23 @@ import (
 	"github.com/zmoog/es/config"
 )
 
-func newContextSetCommand() *cobra.Command {
+func newSetContextCommand() *cobra.Command {
 	var cloudID string
 	var elasticsearchURL string
 	var kibanaURL string
 	var apiKey string
 
 	cmd := &cobra.Command{
-		Use:   "set <name>",
-		Short: "Create or update a named context",
+		Use:   "set-context <name>",
+		Short: "Create or update a context",
 		Long: `Create or update a context entry in the config file.
 
 Examples:
   # Cloud deployment
-  es config context set prod --cloud-id 'name:base64...' --api-key 'encoded-key'
+  es config set-context prod --cloud-id 'name:base64...' --api-key 'encoded-key'
 
   # Local cluster
-  es config context set local --elasticsearch-url https://localhost:9200 --api-key 'encoded-key'`,
+  es config set-context local --elasticsearch-url https://localhost:9200 --api-key 'encoded-key'`,
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			name := args[0]

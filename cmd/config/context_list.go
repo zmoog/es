@@ -8,10 +8,10 @@ import (
 	"github.com/zmoog/es/config"
 )
 
-func newContextListCommand() *cobra.Command {
+func newGetContextsCommand() *cobra.Command {
 	return &cobra.Command{
-		Use:   "list",
-		Short: "List available contexts",
+		Use:   "get-contexts",
+		Short: "List configured contexts",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cfg, err := config.Load()

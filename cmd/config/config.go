@@ -15,7 +15,9 @@ func NewCommand() *cobra.Command {
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {},
 	}
 
-	cmd.AddCommand(newContextCommand())
+	cmd.AddCommand(newGetContextsCommand())
+	cmd.AddCommand(newSetContextCommand())
+	cmd.AddCommand(newUseContextCommand())
 
 	return cmd
 }

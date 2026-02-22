@@ -7,10 +7,10 @@ import (
 	"github.com/zmoog/es/config"
 )
 
-func newContextUseCommand() *cobra.Command {
+func newUseContextCommand() *cobra.Command {
 	return &cobra.Command{
-		Use:   "use <name>",
-		Short: "Set the active context",
+		Use:   "use-context <name>",
+		Short: "Set the current context",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			name := args[0]
