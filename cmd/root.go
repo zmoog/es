@@ -9,10 +9,12 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/zmoog/classeviva/adapters/feedback"
+	cmdconfig "github.com/zmoog/es/cmd/config"
 	"github.com/zmoog/es/cmd/datastream"
 	"github.com/zmoog/es/cmd/docs"
 	"github.com/zmoog/es/cmd/search"
 	"github.com/zmoog/es/cmd/version"
+	"github.com/zmoog/es/config"
 )
 
 var (
@@ -24,18 +26,17 @@ var rootCmd = cobra.Command{
 	Short: "Elasticsearch API via CLI",
 	Long:  "Access the Elasticsearch API via CLI (currenly supports only a tiny subset of commands)",
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		if !viper.IsSet("api.endpoints") {
-			must(cmd.MarkFlagRequired("api-endpoints"))
+		// Apply the active context from the new YAML config file, unless the
+		// relevant values were already provided via flags or environment variables.
+		applyContextConfig(cmd)
+
+		if !viper.IsSet("api.endpoints") && !viper.IsSet("api.cloud-id") {
+			fmt.Fprintln(os.Stderr, "Error: no Elasticsearch endpoint configured. Set --api-endpoints, ES_API_ENDPOINTS, or configure a context with 'es config set-context'.")
+			os.Exit(1)
 		}
 		if !viper.IsSet("api.key") {
-			must(cmd.MarkFlagRequired("api-key"))
-		}
-
-		if !viper.IsSet("client.max-retries") {
-			must(cmd.MarkFlagRequired("max-retries"))
-		}
-		if !viper.IsSet("client.retry-on-status") {
-			must(cmd.MarkFlagRequired("retry-on-status"))
+			fmt.Fprintln(os.Stderr, "Error: no API key configured. Set --api-key, ES_API_KEY, or configure a context with 'es config set-context'.")
+			os.Exit(1)
 		}
 	},
 }
@@ -50,6 +51,7 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.es/config)")
+	rootCmd.PersistentFlags().StringP("context", "", "", "Context name to use (overrides current-context in config file)")
 	rootCmd.PersistentFlags().StringP("api-endpoints", "e", "", "Elasticsearch API endpoints")
 	rootCmd.PersistentFlags().StringP("api-key", "k", "", "Elasticsearch API key")
 
@@ -57,13 +59,14 @@ func init() {
 	rootCmd.PersistentFlags().IntP("client-max-retries", "m", 1, "Maximum number of retries")
 	rootCmd.PersistentFlags().StringP("client-ca-cert-path", "c", "", "CA certificate path")
 
+	rootCmd.AddCommand(cmdconfig.NewCommand())
 	rootCmd.AddCommand(datastream.NewCommand())
 	rootCmd.AddCommand(docs.NewCommand())
 	rootCmd.AddCommand(search.NewCommand())
 	rootCmd.AddCommand(version.NewCommand())
 }
 
-// initConfig reads in config file and ENV variables if set.
+// initConfig reads in the legacy config file and ENV variables if set.
 func initConfig() {
 	if cfgFile != "" {
 		// Use config file from the flag.
@@ -96,6 +99,52 @@ func initConfig() {
 	must(viper.BindPFlag("client.retry-on-status", rootCmd.PersistentFlags().Lookup("client-retry-on-status")))
 	must(viper.BindPFlag("client.max-retries", rootCmd.PersistentFlags().Lookup("client-max-retries")))
 	must(viper.BindPFlag("client.ca-cert-path", rootCmd.PersistentFlags().Lookup("client-ca-cert-path")))
+}
+
+// applyContextConfig loads the new YAML context config and bridges the active
+// context's settings into Viper, but only when they have not already been
+// supplied via an explicit CLI flag or the corresponding environment variable.
+func applyContextConfig(cmd *cobra.Command) {
+	ctxCfg, err := config.Load()
+	if err != nil || ctxCfg == nil {
+		return
+	}
+
+	// Resolve which context is active: --context flag takes priority.
+	contextName := ""
+	if f := cmd.Root().PersistentFlags().Lookup("context"); f != nil && f.Changed {
+		contextName = f.Value.String()
+	}
+	if contextName == "" {
+		contextName = ctxCfg.CurrentContext
+	}
+	if contextName == "" {
+		return
+	}
+
+	ctx, ok := ctxCfg.Contexts[contextName]
+	if !ok {
+		return
+	}
+
+	// Helper: returns true if the flag was explicitly set by the user OR the
+	// corresponding environment variable is non-empty.
+	flagOrEnvSet := func(flagName, envVar string) bool {
+		if f := cmd.Root().PersistentFlags().Lookup(flagName); f != nil && f.Changed {
+			return true
+		}
+		return os.Getenv(envVar) != ""
+	}
+
+	if ctx.CloudID != "" && !flagOrEnvSet("api-endpoints", "ES_API_ENDPOINTS") {
+		viper.Set("api.cloud-id", ctx.CloudID)
+	}
+	if ctx.ElasticsearchURL != "" && !flagOrEnvSet("api-endpoints", "ES_API_ENDPOINTS") {
+		viper.Set("api.endpoints", ctx.ElasticsearchURL)
+	}
+	if ctx.APIKey != "" && !flagOrEnvSet("api-key", "ES_API_KEY") {
+		viper.Set("api.key", ctx.APIKey)
+	}
 }
 
 func must(err error) {
