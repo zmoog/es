@@ -31,17 +31,12 @@ var rootCmd = cobra.Command{
 		applyContextConfig(cmd)
 
 		if !viper.IsSet("api.endpoints") && !viper.IsSet("api.cloud-id") {
-			must(cmd.MarkFlagRequired("api-endpoints"))
+			fmt.Fprintln(os.Stderr, "Error: no Elasticsearch endpoint configured. Set --api-endpoints, ES_API_ENDPOINTS, or configure a context with 'es config set-context'.")
+			os.Exit(1)
 		}
 		if !viper.IsSet("api.key") {
-			must(cmd.MarkFlagRequired("api-key"))
-		}
-
-		if !viper.IsSet("client.max-retries") {
-			must(cmd.MarkFlagRequired("max-retries"))
-		}
-		if !viper.IsSet("client.retry-on-status") {
-			must(cmd.MarkFlagRequired("retry-on-status"))
+			fmt.Fprintln(os.Stderr, "Error: no API key configured. Set --api-key, ES_API_KEY, or configure a context with 'es config set-context'.")
+			os.Exit(1)
 		}
 	},
 }

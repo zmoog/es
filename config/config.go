@@ -31,7 +31,7 @@ func ConfigFilePath() (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("getting user config dir: %w", err)
 	}
-	return filepath.Join(configDir, "elastic", "config.yaml"), nil
+	return filepath.Join(configDir, "es", "config.yaml"), nil
 }
 
 // Load reads the config file and returns the parsed Config.
