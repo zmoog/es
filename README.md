@@ -14,6 +14,12 @@ Install this tool using Homebrew:
 brew install zmoog/homebrew-es/es
 ```
 
+If you already have `es` installed and want to get the latest:
+
+```sh
+brew upgrade zmoog/homebrew-es/es
+```
+
 ### Using Go
 
 Install this tool using Go:
