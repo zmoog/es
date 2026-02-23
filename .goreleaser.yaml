@@ -47,6 +47,7 @@ homebrew_casks:
       owner: zmoog
       name: homebrew-es
       branch: main
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     binaries:
       - es
     hooks:
